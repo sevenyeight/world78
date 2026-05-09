@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MyWorld</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f5efe6'/><text y='.88em' font-size='62' x='10' font-family='Georgia,serif' fill='%233d2b1f'>🌍</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MyWorld">
+<meta name="theme-color" content="#f5efe6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Crimson+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5efe6;
+  --bg2: #ede5d8;
+  --surface: #faf6f0;
+  --surface2: #f0e8db;
+  --ink: #2a1f14;
+  --ink2: #5c4433;
+  --ink3: #8a6f5a;
+  --ink4: #b09880;
+  --terra: #c4623a;
+  --terra-light: #e8957a;
+  --sage: #7a9e7e;
+  --sage-light: #a8c5ab;
+  --gold: #c49a3c;
+  --gold-light: #e2bf7a;
+  --sky: #6a9bb8;
+  --sky-light: #a8c8dc;
+  --border: rgba(90,60,40,0.12);
+  --border2: rgba(90,60,40,0.2);
+  --radius: 16px;
+  --shadow: 0 2px 16px rgba(42,31,20,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left { display: flex; align-items: center; gap: 10px; }
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--ink);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.app-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+
+.app-date {
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px;
+  color: var(--ink4);
+  letter-spacing: 0.3px;
+}
+
+/* ── TAB NAV ── */
+.tab-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 8px;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  color: var(--terra);
+  border-bottom-color: var(--terra);
+}
+.tab-btn:hover:not(.active) { color: var(--ink2); }
+
+/* ── PANELS ── */
+.panel { display: none; padding: 20px 16px 100px; animation: fadeIn 0.25s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION TITLES ── */
+.panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.panel-sub {
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px;
+  color: var(--ink4);
+  margin-bottom: 20px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.card.terra::before { background: var(--terra); }
+.card.sage::before { background: var(--sage); }
+.card.gold::before { background: var(--gold); }
+.card.sky::before { background: var(--sky); }
+.card.ink::before { background: var(--ink2); }
+
+.card-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.card-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+/* ── OUTPUT BOX ── */
+.output-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink2);
+  min-height: 60px;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+  display: none;
+}
+.output-box.visible { display: block; animation: fadeIn 0.3s ease; }
+.output-box.loading {
+  display: block;
+  color: var(--ink4);
+  font-style: italic;
+  font-family: 'Crimson Pro', serif;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 100px;
+  border: none;
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-full { width: 100%; justify-content: center; border-radius: 10px; padding: 12px; }
+.btn-terra { background: var(--terra); color: #fff; }
+.btn-terra:hover { background: #b35530; }
+.btn-sage { background: var(--sage); color: #fff; }
+.btn-sage:hover { background: #6a8e6e; }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-gold:hover { background: #b08830; }
+.btn-sky { background: var(--sky); color: #fff; }
+.btn-sky:hover { background: #5a8aa8; }
+.btn-ink { background: var(--ink); color: var(--bg); }
+.btn-ink:hover { background: var(--ink2); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--ink3); }
+.btn-ghost:hover { background: var(--surface2); color: var(--ink2); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.97); }
+
+/* ── SPINNER ── */
+.spin {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: rot 0.7s linear infinite;
+}
+@keyframes rot { to { transform: rotate(360deg); } }
+
+/* ── HOME CARDS ── */
+.home-grid { display: grid; gap: 14px; }
+
+.spark-card {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.spark-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.spark-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 10px;
+}
+.spark-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--bg);
+}
+
+/* ── INPUTS ── */
+textarea, input[type="text"], select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  padding: 12px 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  line-height: 1.6;
+}
+textarea:focus, input[type="text"]:focus, select:focus {
+  border-color: var(--terra);
+}
+textarea::placeholder, input::placeholder { color: var(--ink4); font-style: italic; }
+select { cursor: pointer; }
+
+/* ── JOURNAL ── */
+.journal-entry {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.journal-entry:hover { box-shadow: 0 4px 20px rgba(42,31,20,0.1); }
+.entry-date {
+  font-family: 'Crimson Pro', serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 6px;
+}
+.entry-preview {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.entry-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tag-pill {
+  font-family: 'Crimson Pro', serif;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 100px;
+  background: var(--surface2);
+  color: var(--ink3);
+  border: 1px solid var(--border);
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(42,31,20,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  padding: 20px;
+  overflow-y: auto;
+}
+.modal-overlay.visible { display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 20px 60px rgba(42,31,20,0.3);
+  animation: fadeIn 0.25s ease;
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+.modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 700;
+}
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink3);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-body { font-size: 14px; line-height: 1.75; color: var(--ink2); white-space: pre-wrap; }
+
+/* ── SOCIAL PLATFORMS ── */
+.platform-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.platform-btn {
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border2);
+  background: none;
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.platform-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(245,239,230,0.96);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  padding: 6px 4px;
+  border: none; background: none; cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-icon { font-size: 20px; transition: transform 0.2s; }
+.nav-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 10px; letter-spacing: 0.3px;
+  color: var(--ink4);
+  transition: color 0.2s;
+}
+.nav-item.active .nav-label { color: var(--terra); }
+.nav-item.active .nav-icon { transform: scale(1.15); }
+
+/* ── DIVIDER ── */
+.divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+/* ── CHAR COUNT ── */
+.char-count {
+  font-family: 'Crimson Pro', serif;
+  font-size: 11px; color: var(--ink4);
+  text-align: right; margin-top: 4px;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center; padding: 40px 20px;
+  color: var(--ink4);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-style: italic;
+}
+
+/* ── FILTER ROW ── */
+.filter-row {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; padding-bottom: 4px;
+  margin-bottom: 14px;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0; padding: 5px 14px;
+  border-radius: 100px; border: 1px solid var(--border2);
+  background: none; font-family: 'Crimson Pro', serif;
+  font-size: 12px; color: var(--ink3); cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.filter-chip.active { background: var(--terra); color: #fff; border-color: var(--terra); }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 380px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-left">
+    <div class="logo-mark">🌍</div>
+    <div>
+      <div class="app-name">MyWorld</div>
+      <div class="app-date" id="header-date">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('home',this)">🏠 Home</button>
+  <button class="tab-btn" onclick="showTab('create',this)">✍️ Create</button>
+  <button class="tab-btn" onclick="showTab('explore',this)">🌊 Explore</button>
+  <button class="tab-btn" onclick="showTab('myworld',this)">🐱 My World</button>
+  <button class="tab-btn" onclick="showTab('journal',this)">📖 Journal</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ HOME -->
+<div id="panel-home" class="panel active">
+  <div class="panel-title">Good day.</div>
+  <div class="panel-sub">Your daily sparks, fresh each visit.</div>
+
+  <!-- Motivational spark - auto loads -->
+  <div class="spark-card" id="home-motive-card">
+    <div class="spark-label">✨ Today's Motivation</div>
+    <div class="spark-text" id="home-motive">Loading your spark…</div>
+  </div>
+
+  <div class="card sage">
+    <div class="card-label">🌿 Mindful Prompt</div>
+    <div class="output-box visible" id="home-mindful">Loading…</div>
+    <button class="btn btn-sage btn-full" onclick="genHome('mindful')">New prompt</button>
+  </div>
+
+  <div class="card gold">
+    <div class="card-label">💡 Tip of the Day</div>
+    <div class="output-box visible" id="home-tip">Loading…</div>
+    <button class="btn btn-gold btn-full" onclick="genHome('tip')">New tip</button>
+  </div>
+
+  <div class="card terra">
+    <div class="card-label">💪 Confidence Booster</div>
+    <div class="output-box visible" id="home-confidence">Loading…</div>
+    <button class="btn btn-terra btn-full" onclick="genHome('confidence')">Boost me</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ CREATE -->
+<div id="panel-create" class="panel">
+  <div class="panel-title">Create.</div>
+  <div class="panel-sub">Writing, poetry, sketches, and social content.</div>
+
+  <!-- Writing Prompt -->
+  <div class="card terra">
+    <span class="card-icon">📝</span>
+    <div class="card-label">Writing Prompt</div>
+    <select id="writing-genre" style="margin-bottom:10px;">
+      <option value="general">General fiction</option>
+      <option value="sci-fi">Sci-fi</option>
+      <option value="personal essay">Personal essay</option>
+      <option value="flash fiction">Flash fiction</option>
+      <option value="horror">Horror</option>
+      <option value="adventure">Adventure</option>
+    </select>
+    <div class="output-box" id="writing-out"></div>
+    <button class="btn btn-terra btn-full" id="writing-btn" onclick="gen('writing','writing-out','writing-btn')">Generate prompt →</button>
+  </div>
+
+  <!-- Poetry -->
+  <div class="card gold">
+    <span class="card-icon">🌸</span>
+    <div class="card-label">Poetry Generator</div>
+    <input type="text" id="poetry-topic" placeholder="A theme, image, or feeling…" style="margin-bottom:10px;">
+    <select id="poetry-form" style="margin-bottom:10px;">
+      <option value="free verse">Free verse</option>
+      <option value="haiku">Haiku</option>
+      <option value="sonnet">Sonnet</option>
+      <option value="prose poem">Prose poem</option>
+      <option value="ode">Ode</option>
+    </select>
+    <div class="output-box" id="poetry-out"></div>
+    <button class="btn btn-gold btn-full" id="poetry-btn" onclick="gen('poetry','poetry-out','poetry-btn')">Write poem →</button>
+  </div>
+
+  <!-- Sketch Idea -->
+  <div class="card ink">
+    <span class="card-icon">✏️</span>
+    <div class="card-label">Sketch Idea</div>
+    <select id="sketch-style" style="margin-bottom:10px;">
+      <option value="pencil sketch">Pencil sketch</option>
+      <option value="ink illustration">Ink illustration</option>
+      <option value="watercolor study">Watercolor study</option>
+      <option value="character design">Character design</option>
+      <option value="urban/landscape">Urban / landscape</option>
+      <option value="abstract">Abstract</option>
+    </select>
+    <div class="output-box" id="sketch-out"></div>
+    <button class="btn btn-ink btn-full" id="sketch-btn" onclick="gen('sketch','sketch-out','sketch-btn')">Inspire me →</button>
+  </div>
+
+  <!-- Social Media -->
+  <div class="card sky">
+    <span class="card-icon">📱</span>
+    <div class="card-label">Social Media Content</div>
+    <div class="platform-row" id="platform-row">
+      <button class="platform-btn active" onclick="setPlatform(this,'Instagram')">Instagram</button>
+      <button class="platform-btn" onclick="setPlatform(this,'TikTok')">TikTok</button>
+      <button class="platform-btn" onclick="setPlatform(this,'Twitter/X')">Twitter/X</button>
+      <button class="platform-btn" onclick="setPlatform(this,'YouTube')">YouTube</button>
+      <button class="platform-btn" onclick="setPlatform(this,'LinkedIn')">LinkedIn</button>
+    </div>
+    <select id="social-topic" style="margin-bottom:10px;">
+      <option value="cats">🐱 Cats</option>
+      <option value="fishing">🎣 Fishing</option>
+      <option value="art & sketching">🎨 Art</option>
+      <option value="scooter riding">🛵 Scooter</option>
+      <option value="sci-fi books">📚 Sci-fi</option>
+      <option value="physics experiments">⚗️ PFW Experiments</option>
+      <option value="poetry">🌸 Poetry</option>
+      <option value="personal growth">💪 Growth</option>
+    </select>
+    <div class="output-box" id="social-out"></div>
+    <button class="btn btn-sky btn-full" id="social-btn" onclick="gen('social','social-out','social-btn')">Generate content →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ EXPLORE -->
+<div id="panel-explore" class="panel">
+  <div class="panel-title">Explore.</div>
+  <div class="panel-sub">Fishing, scooter rides, PFW videos, and sci-fi worlds.</div>
+
+  <!-- Fishing -->
+  <div class="card sage">
+    <span class="card-icon">🎣</span>
+    <div class="card-label">Fishing Tip & Session Idea</div>
+    <div class="two-col" style="margin-bottom:10px;">
+      <select id="fish-type">
+        <option>Bass</option>
+        <option>Trout</option>
+        <option>Catfish</option>
+        <option>Crappie</option>
+        <option>Carp</option>
+        <option>Surf fishing</option>
+        <option>Any species</option>
+      </select>
+      <select id="fish-condition">
+        <option>Morning</option>
+        <option>Midday</option>
+        <option>Evening</option>
+        <option>Overcast</option>
+        <option>Post-rain</option>
+        <option>Hot day</option>
+      </select>
+    </div>
+    <div class="output-box" id="fishing-out"></div>
+    <button class="btn btn-sage btn-full" id="fishing-btn" onclick="gen('fishing','fishing-out','fishing-btn')">Get tip →</button>
+  </div>
+
+  <!-- Scooter -->
+  <div class="card terra">
+    <span class="card-icon">🛵</span>
+    <div class="card-label">Scooter Ride Idea</div>
+    <select id="scooter-vibe" style="margin-bottom:10px;">
+      <option>Scenic / chill cruise</option>
+      <option>Neighborhood exploration</option>
+      <option>Errand + adventure combo</option>
+      <option>Sunset ride</option>
+      <option>Early morning solo</option>
+      <option>Photograph-worthy route</option>
+    </select>
+    <div class="output-box" id="scooter-out"></div>
+    <button class="btn btn-terra btn-full" id="scooter-btn" onclick="gen('scooter','scooter-out','scooter-btn')">Plan ride →</button>
+  </div>
+
+  <!-- PFW Experiment -->
+  <div class="card gold">
+    <span class="card-icon">⚗️</span>
+    <div class="card-label">PFW Experiment Idea</div>
+    <select id="pfwconcept" style="margin-bottom:10px;">
+      <option>Gravity</option>
+      <option>Air pressure</option>
+      <option>Surface tension</option>
+      <option>Friction</option>
+      <option>Momentum</option>
+      <option>Optics / light</option>
+      <option>Electricity</option>
+      <option>Surprise me</option>
+    </select>
+    <div class="output-box" id="pfw-out"></div>
+    <button class="btn btn-gold btn-full" id="pfw-btn" onclick="gen('pfw','pfw-out','pfw-btn')">Get experiment →</button>
+  </div>
+
+  <!-- Sci-fi Book -->
+  <div class="card sky">
+    <span class="card-icon">📚</span>
+    <div class="card-label">Sci-Fi Book Recommendation</div>
+    <select id="scifi-mood" style="margin-bottom:10px;">
+      <option>Epic space opera</option>
+      <option>Hard sci-fi / technical</option>
+      <option>Dystopian</option>
+      <option>First contact / aliens</option>
+      <option>Time travel</option>
+      <option>AI & consciousness</option>
+      <option>Post-apocalyptic</option>
+      <option>Solarpunk / hopeful</option>
+    </select>
+    <div class="output-box" id="scifi-out"></div>
+    <button class="btn btn-sky btn-full" id="scifi-btn" onclick="gen('scifi','scifi-out','scifi-btn')">Recommend book →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ MY WORLD -->
+<div id="panel-myworld" class="panel">
+  <div class="panel-title">My World.</div>
+  <div class="panel-sub">Cats, art, confidence, and daily sparks.</div>
+
+  <!-- Cat fact -->
+  <div class="card terra">
+    <span class="card-icon">🐱</span>
+    <div class="card-label">Cat Wisdom & Fun Fact</div>
+    <select id="cat-topic" style="margin-bottom:10px;">
+      <option>Random fun fact</option>
+      <option>Cat behavior explained</option>
+      <option>Cat health & wellness</option>
+      <option>Cat body language</option>
+      <option>Cat enrichment idea</option>
+      <option>Why cats do weird things</option>
+    </select>
+    <div class="output-box" id="cat-out"></div>
+    <button class="btn btn-terra btn-full" id="cat-btn" onclick="gen('cat','cat-out','cat-btn')">Tell me →</button>
+  </div>
+
+  <!-- Art inspiration -->
+  <div class="card gold">
+    <span class="card-icon">🎨</span>
+    <div class="card-label">Art Inspiration</div>
+    <select id="art-medium" style="margin-bottom:10px;">
+      <option>Pencil / graphite</option>
+      <option>Ink pen</option>
+      <option>Watercolor</option>
+      <option>Charcoal</option>
+      <option>Digital</option>
+      <option>Mixed media</option>
+    </select>
+    <div class="output-box" id="art-out"></div>
+    <button class="btn btn-gold btn-full" id="art-btn" onclick="gen('art','art-out','art-btn')">Inspire me →</button>
+  </div>
+
+  <!-- Confidence booster -->
+  <div class="card sage">
+    <span class="card-icon">💪</span>
+    <div class="card-label">Confidence Booster</div>
+    <select id="conf-focus" style="margin-bottom:10px;">
+      <option>General confidence</option>
+      <option>Creative confidence</option>
+      <option>Social confidence</option>
+      <option>Body confidence</option>
+      <option>Morning pump-up</option>
+      <option>Overcoming self-doubt</option>
+    </select>
+    <div class="output-box" id="conf-out"></div>
+    <button class="btn btn-sage btn-full" id="conf-btn" onclick="gen('confidence2','conf-out','conf-btn')">Boost me →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ JOURNAL -->
+<div id="panel-journal" class="panel">
+  <div class="panel-title">Journal.</div>
+  <div class="panel-sub">Private, local, yours.</div>
+
+  <!-- Write entry -->
+  <div class="card ink">
+    <div class="card-label">New Entry</div>
+    <textarea id="j-content" rows="6" placeholder="What's on your mind…" style="margin-bottom:8px;"></textarea>
+    <input type="text" id="j-tags" placeholder="Tags: cats, fishing, gratitude…" style="margin-bottom:10px;">
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ink" style="flex:1;justify-content:center;" onclick="saveEntry()">Save entry</button>
+      <button class="btn btn-ghost" onclick="genJournalPrompt()">Get prompt</button>
+    </div>
+    <div class="output-box" id="jprompt-out" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-row" id="tag-filters">
+    <button class="filter-chip active" onclick="filterEntries('all',this)">All</button>
+  </div>
+
+  <!-- Entries -->
+  <div id="journal-list"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="entry-modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-date">Entry</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="entry-tags" id="modal-tags" style="margin-bottom:14px;"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="deleteEntry()">Delete entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" id="nav-home" onclick="showTab('home',null,'nav-home')">
+    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" id="nav-create" onclick="showTab('create',null,'nav-create')">
+    <span class="nav-icon">✍️</span><span class="nav-label">Create</span>
+  </button>
+  <button class="nav-item" id="nav-explore" onclick="showTab('explore',null,'nav-explore')">
+    <span class="nav-icon">🌊</span><span class="nav-label">Explore</span>
+  </button>
+  <button class="nav-item" id="nav-myworld" onclick="showTab('myworld',null,'nav-myworld')">
+    <span class="nav-icon">🐱</span><span class="nav-label">My World</span>
+  </button>
+  <button class="nav-item" id="nav-journal" onclick="showTab('journal',null,'nav-journal')">
+    <span class="nav-icon">📖</span><span class="nav-label">Journal</span>
+  </button>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let entries = JSON.parse(localStorage.getItem('mw-journal') || '[]');
+let activePlatform = 'Instagram';
+let activeEntryId = null;
+let activeFilter = 'all';
+
+// ─── DATE ────────────────────────────────────────────────────────────────────
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const now = new Date();
+document.getElementById('header-date').textContent =
+  `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showTab(name, tabEl, navId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+  const navMap = { home:'nav-home', create:'nav-create', explore:'nav-explore', myworld:'nav-myworld', journal:'nav-journal' };
+  document.getElementById(navId || navMap[name])?.classList.add('active');
+  // sync tab bar
+  const ti = {home:0,create:1,explore:2,myworld:3,journal:4};
+  document.querySelectorAll('.tab-btn')[ti[name]]?.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── API ─────────────────────────────────────────────────────────────────────
+async function callClaude(prompt, system) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: system || 'You are a helpful creative assistant. Be warm, specific, and inspiring. Keep responses concise — 2-5 sentences unless the format requires more.',
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!r.ok) throw new Error(`API error ${r.status}`);
+  const d = await r.json();
+  return d.content.find(b => b.type === 'text')?.text || '';
+}
+
+// ─── HOME AUTO-LOAD ───────────────────────────────────────────────────────────
+async function loadHome() {
+  const prompts = {
+    motive: { el: 'home-motive', prompt: 'Write a single powerful motivational sentence — vivid, specific, not clichéd. No preamble. Just the sentence.', system: 'You write motivational sparks. One sentence. Vivid and real, not generic. No quotes around it.' },
+    mindful: { el: 'home-mindful', prompt: 'Write a mindfulness prompt for someone who loves cats, nature, and creativity. 2-3 sentences. Grounding and specific.', system: 'You are a mindfulness guide. Be warm and concrete. Not new-agey.' },
+    tip: { el: 'home-tip', prompt: 'Give one specific, useful tip for today. It can be about creativity, focus, fishing, riding, reading, journaling, or any enriching hobby. 2-3 sentences.', system: 'You give one excellent, specific daily tip. Not generic life advice.' },
+    confidence: { el: 'home-confidence', prompt: 'Write a confidence booster for someone creative and curious. Be direct and personal. 2-3 sentences.', system: 'You write confidence boosters. Warm, direct, real. No toxic positivity.' }
+  };
+
+  for (const [key, cfg] of Object.entries(prompts)) {
+    const el = document.getElementById(cfg.el);
+    if (el) {
+      el.classList.add('visible');
+      el.textContent = 'Loading…';
+      try {
+        const text = await callClaude(cfg.prompt, cfg.system);
+        el.textContent = text;
+      } catch(e) {
+        el.textContent = 'Tap refresh to load.';
+      }
+    }
+  }
+}
+
+// ─── HOME REFRESH ─────────────────────────────────────────────────────────────
+async function genHome(type) {
+  const configs = {
+    mindful: { el:'home-mindful', prompt:'Write a new mindfulness prompt for someone who loves cats, nature, and creativity. 2-3 sentences.', system:'You are a mindfulness guide. Be warm and concrete.' },
+    tip: { el:'home-tip', prompt:'Give one specific useful tip for today — about creativity, focus, fishing, riding, reading, or journaling. 2-3 sentences.', system:'You give one excellent specific daily tip.' },
+    confidence: { el:'home-confidence', prompt:'Write a fresh confidence booster for a creative, curious person. Direct and personal. 2-3 sentences.', system:'You write confidence boosters. Warm, direct, real.' }
+  };
+  const cfg = configs[type];
+  if (!cfg) return;
+  const el = document.getElementById(cfg.el);
+  el.classList.add('visible');
+  el.textContent = 'Loading…';
+  try {
+    el.textContent = await callClaude(cfg.prompt, cfg.system);
+  } catch(e) { el.textContent = 'Error loading. Try again.'; }
+}
+
+// ─── GENERIC GENERATOR ────────────────────────────────────────────────────────
+const generators = {
+  writing: () => {
+    const genre = document.getElementById('writing-genre').value;
+    return {
+      prompt: `Give me a compelling ${genre} writing prompt. 2-3 sentences that set up an interesting scenario or question. No preamble.`,
+      system: 'You are a creative writing coach. Prompts should be specific, evocative, and inspiring. Not clichéd.'
+    };
+  },
+  poetry: () => {
+    const topic = document.getElementById('poetry-topic').value || 'something surprising';
+    const form = document.getElementById('poetry-form').value;
+    return {
+      prompt: `Write a ${form} about: ${topic}. Make it genuinely moving and specific, not generic.`,
+      system: 'You are a poet. Write with precision and feeling. No empty abstractions.'
+    };
+  },
+  sketch: () => {
+    const style = document.getElementById('sketch-style').value;
+    return {
+      prompt: `Give me a specific, inspiring ${style} subject or scene to draw. Describe it vividly in 2-3 sentences including composition, mood, and a few key details to focus on.`,
+      system: 'You give sketch ideas to artists. Be specific about subject, composition, and mood. Inspire without being generic.'
+    };
+  },
+  social: () => {
+    const platform = activePlatform;
+    const topic = document.getElementById('social-topic').value;
+    return {
+      prompt: `Write a ${platform} post idea about ${topic}. Include: a hook opening line, the core content angle, and any relevant hashtags or format tips. Keep it authentic and engaging.`,
+      system: `You are a social media strategist who helps creators make genuine, engaging content. You know ${platform} well. Be specific and creative.`
+    };
+  },
+  fishing: () => {
+    const fish = document.getElementById('fish-type').value;
+    const cond = document.getElementById('fish-condition').value;
+    return {
+      prompt: `Give a specific, practical fishing tip for catching ${fish} during ${cond} conditions. Include technique, bait/lure recommendation, and one secret most anglers miss. 3-4 sentences.`,
+      system: 'You are an experienced angler. Be specific and practical. Give real insights, not generic advice.'
+    };
+  },
+  scooter: () => {
+    const vibe = document.getElementById('scooter-vibe').value;
+    return {
+      prompt: `Suggest a ${vibe} ride idea for someone on a 500-watt seated two-wheeled electric scooter in a typical city/suburb. Include a vibe, route type, time of day, and one thing to notice or experience. Keep it inspiring. 3-4 sentences.`,
+      system: 'You help electric scooter riders plan memorable rides. Be specific and evocative.'
+    };
+  },
+  pfw: () => {
+    const concept = document.getElementById('pfwconcept').value;
+    return {
+      prompt: `Suggest a fun, visually impressive Physics For the Win (PFW) experiment about ${concept} that can be filmed as a short video. Include: what you need, what happens, and why it's visually satisfying. 4-5 sentences.`,
+      system: 'You design fun physics experiments for videos. Be specific, safe, and visually compelling.'
+    };
+  },
+  scifi: () => {
+    const mood = document.getElementById('scifi-mood').value;
+    return {
+      prompt: `Recommend a specific ${mood} sci-fi book. Include the title, author, a 2-sentence non-spoiler hook, and why someone would love it. Be enthusiastic but honest.`,
+      system: 'You are a sci-fi book expert. Recommend real, excellent books with genuine enthusiasm.'
+    };
+  },
+  cat: () => {
+    const topic = document.getElementById('cat-topic').value;
+    return {
+      prompt: `Share something about cats related to: ${topic}. Make it genuinely interesting and specific — something a cat lover would find delightful or useful. 3-4 sentences.`,
+      system: 'You are a cat expert and enthusiast. Share real, fascinating cat knowledge warmly.'
+    };
+  },
+  art: () => {
+    const medium = document.getElementById('art-medium').value;
+    return {
+      prompt: `Give me an inspiring ${medium} art project or exercise for today. Include the subject, the artistic challenge to explore, and one technique tip. 3-4 sentences.`,
+      system: 'You inspire artists. Be specific about technique and subject. Make it feel achievable and exciting.'
+    };
+  },
+  confidence2: () => {
+    const focus = document.getElementById('conf-focus').value;
+    return {
+      prompt: `Write a ${focus} confidence booster. Be direct, warm, and specific — speak to someone creative and self-aware. 2-4 sentences.`,
+      system: 'You write confidence boosters. Real, warm, direct. Not toxic positivity. No clichés.'
+    };
+  }
+};
+
+async function gen(type, outId, btnId) {
+  const cfg = generators[type]?.();
+  if (!cfg) return;
+  const out = document.getElementById(outId);
+  const btn = document.getElementById(btnId);
+  out.className = 'output-box loading visible';
+  out.textContent = 'Thinking…';
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.innerHTML = '<span class="spin"></span> Loading…';
+  try {
+    const text = await callClaude(cfg.prompt, cfg.system);
+    out.className = 'output-box visible';
+    out.textContent = text;
+  } catch(e) {
+    out.className = 'output-box visible';
+    out.textContent = 'Error: ' + e.message;
+  }
+  btn.disabled = false;
+  btn.textContent = orig;
+}
+
+// ─── PLATFORM ────────────────────────────────────────────────────────────────
+function setPlatform(el, name) {
+  document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  activePlatform = name;
+}
+
+// ─── JOURNAL ─────────────────────────────────────────────────────────────────
+async function genJournalPrompt() {
+  const out = document.getElementById('jprompt-out');
+  out.className = 'output-box loading visible';
+  out.textContent = 'Thinking…';
+  try {
+    const text = await callClaude(
+      'Give me a thoughtful, personal journal prompt. It should encourage reflection, creativity, or gratitude. Could relate to daily life, relationships, nature, creativity, or growth. 1-2 sentences.',
+      'You write journal prompts. Be thoughtful and personal, not generic.'
+    );
+    out.className = 'output-box visible';
+    out.textContent = text;
+  } catch(e) {
+    out.className = 'output-box visible';
+    out.textContent = 'Error loading prompt.';
+  }
+}
+
+function saveEntry() {
+  const content = document.getElementById('j-content').value.trim();
+  if (!content) { alert('Write something first.'); return; }
+  const tagStr = document.getElementById('j-tags').value.trim();
+  const tags = tagStr ? tagStr.split(',').map(t => t.trim().toLowerCase()).filter(Boolean) : [];
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    content,
+    tags
+  };
+  entries.unshift(entry);
+  localStorage.setItem('mw-journal', JSON.stringify(entries));
+  document.getElementById('j-content').value = '';
+  document.getElementById('j-tags').value = '';
+  document.getElementById('jprompt-out').className = 'output-box';
+  renderJournal();
+}
+
+function renderJournal() {
+  const list = document.getElementById('journal-list');
+  // Collect all tags
+  const allTags = new Set();
+  entries.forEach(e => e.tags?.forEach(t => allTags.add(t)));
+
+  // Render filter chips
+  const filterRow = document.getElementById('tag-filters');
+  filterRow.innerHTML = `<button class="filter-chip ${activeFilter==='all'?'active':''}" onclick="filterEntries('all',this)">All</button>`;
+  allTags.forEach(tag => {
+    filterRow.innerHTML += `<button class="filter-chip ${activeFilter===tag?'active':''}" onclick="filterEntries('${tag}',this)">${tag}</button>`;
+  });
+
+  // Filter entries
+  const filtered = activeFilter === 'all' ? entries : entries.filter(e => e.tags?.includes(activeFilter));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">No entries yet.<br>Start writing above.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(e => {
+    const d = new Date(e.date);
+    const dateStr = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()} ${d.getFullYear()} · ${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+    const tags = (e.tags||[]).map(t => `<span class="tag-pill">${t}</span>`).join('');
+    return `<div class="journal-entry" onclick="openEntry(${e.id})">
+      <div class="entry-date">${dateStr}</div>
+      <div class="entry-preview">${escHtml(e.content)}</div>
+      ${tags ? `<div class="entry-tags">${tags}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function filterEntries(tag, el) {
+  activeFilter = tag;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderJournal();
+}
+
+function openEntry(id) {
+  const e = entries.find(e => e.id === id);
+  if (!e) return;
+  activeEntryId = id;
+  const d = new Date(e.date);
+  document.getElementById('modal-date').textContent =
+    `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+  document.getElementById('modal-tags').innerHTML =
+    (e.tags||[]).map(t => `<span class="tag-pill">${t}</span>`).join('');
+  document.getElementById('modal-body').textContent = e.content;
+  document.getElementById('entry-modal').classList.add('visible');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('entry-modal')) {
+    document.getElementById('entry-modal').classList.remove('visible');
+    activeEntryId = null;
+  }
+}
+
+function deleteEntry() {
+  if (!activeEntryId) return;
+  if (!confirm('Delete this entry?')) return;
+  entries = entries.filter(e => e.id !== activeEntryId);
+  localStorage.setItem('mw-journal', JSON.stringify(entries));
+  closeModal();
+  renderJournal();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderJournal();
+loadHome();
+</script>
+</body>
+</html>
